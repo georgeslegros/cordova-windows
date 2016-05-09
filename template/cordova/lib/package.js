@@ -22,6 +22,7 @@ var Q     = require('q'),
     path  = require('path'),
     spawn = require('./spawn'),
     utils = require('./utils');
+var _ = require('lodash');
 
 // returns folder that contains package with chip architecture,
 // build and project types specified by script parameters
@@ -53,7 +54,8 @@ module.exports.getPackage = function (projectType, buildtype, buildArch) {
             var pkgInfo = module.exports.getPackageFileInfo(packageFile);
 
             if (pkgInfo && pkgInfo.type == projectType &&
-                pkgInfo.arch == buildArch && pkgInfo.buildtype == buildtype) {
+                (pkgInfo.arch == buildArch || _.find(pkgInfo.archs , function(o) { return o == buildArch; }))
+				&& pkgInfo.buildtype == buildtype) {
                 // if package's properties are corresponds to properties provided
                 // resolve the promise with this package's info
                 return Q.resolve(pkgInfo);
