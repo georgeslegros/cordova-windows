@@ -25,7 +25,6 @@ var AppxManifest = require('./AppxManifest');
 var events = require('cordova-common').events;
 var spawn = require('cordova-common').superspawn.spawn;
 var CordovaError = require('cordova-common').CordovaError;
-var _ = require('lodash');
 
 // returns folder that contains package with chip architecture,
 // build and project types specified by script parameters
@@ -57,7 +56,7 @@ module.exports.getPackage = function (projectType, buildtype, buildArch) {
             var pkgInfo = module.exports.getPackageFileInfo(packageFile);
 
             if (pkgInfo && pkgInfo.type == projectType &&
-                (pkgInfo.arch == buildArch || _.find(pkgInfo.archs , function(o) { return o == buildArch; }))
+			compareArchs(pkgInfo, buildArch)
 				&& pkgInfo.buildtype == buildtype) {
                 // if package's properties are corresponds to properties provided
                 // resolve the promise with this package's info
@@ -68,6 +67,20 @@ module.exports.getPackage = function (projectType, buildtype, buildArch) {
 
     // reject because seems that no corresponding packages found
     return Q.reject('Package with specified parameters not found in AppPackages folder');
+};
+
+function compareArchs(pkgInfo, buildArch){
+	if(pkgInfo.arch == buildArch)
+		return true;
+	
+	if(pkgInfo && pkgInfo.archs){
+		for (var archIndex = 0; archIndex < pkgInfo.archs.length; archIndex++) {
+			if(pkgInfo.archs.indexOf(buildArch)> -1){
+				return true;
+			}
+		}
+	}
+	return false;
 };
 
 function getPackagePhoneProductId(packageFile) {
