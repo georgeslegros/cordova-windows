@@ -32,6 +32,7 @@
     "jasmine-node": "1.14.5",
     "jshint": "^2.6.0",
     "rewire": ">=2.1.3",
+    "lodash": "^4.12.0",
     "istanbul": "^0.3.4"
   },
   "bundledDependencies": [
@@ -40,6 +41,7 @@
     "node-uuid",
     "shelljs",
     "elementtree",
+    "lodash",
     "winjs"
   ],
   "author": "Apache Software Foundation",
